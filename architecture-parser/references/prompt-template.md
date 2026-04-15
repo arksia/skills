@@ -37,9 +37,9 @@ First principles:
 3. Pick the most representative rooted runtime scenario for the poster spine.
 4. Summarize the smallest true runtime story in one line.
 5. Extract:
-   - entrypoints or feeds
-   - runtime spine
-   - standout mechanisms that should be surfaced early because they differentiate this repo from a generic repo in the same family
+    - entrypoints or feeds
+    - runtime spine
+    - standout mechanisms that should be surfaced early because they differentiate this repo from a generic repo in the same family
    - effect execution boundary
    - gates or policy boundaries
    - state or persistence substrate
@@ -47,6 +47,12 @@ First principles:
    - workers or async side paths if they materially matter
 6. Merge cross-file logic into mechanisms instead of naming folders.
 7. Omit edges that do not change understanding, but keep the main spine, state, gates, and async paths visible.
+8. Explicitly check for shared runtime owners outside route entrypoints, especially in frontend repos:
+   - task or workflow models
+   - polling or retry engines
+   - cross-page re-edit or re-entry flows
+   - provider or store layers that redirect users between workbenches
+   If one of these reshapes multiple surfaces, promote it into the architecture instead of burying it under a page box or generic service layer.
 
 Output constraints:
 - Use the provided schema exactly.

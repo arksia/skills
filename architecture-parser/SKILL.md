@@ -72,6 +72,16 @@ For each rooted scenario, trace:
 
 If you cannot summarize the runtime in one sentence, keep tracing.
 
+Before you settle on the spine, explicitly check whether the repo hides a shared runtime owner outside the route or page entrypoints, such as:
+
+- a task lifecycle engine
+- a shared workflow model or store
+- a polling or retry runtime
+- a cross-page re-entry mechanism
+- a route-to-route handoff state owner
+
+If one of these reshapes behavior across multiple surfaces, treat it as a first-class mechanism even if it lives in `models`, `stores`, `hooks`, or other non-entry folders.
+
 ### 4. Extract mechanisms, not folders
 
 Merge files into behavior-level mechanisms when they act as one decision.
@@ -192,6 +202,16 @@ Usually emphasize entry modes, the query or task loop, tool or effect runtime, p
 ### `frontend application`
 
 Usually emphasize auth, bootstrap, and visibility gates, the route or layout shell, long-lived client state, shared workflow loops, and backend, storage, realtime, or notification boundaries. Do not turn the result into a route list or component catalog.
+
+Before finalizing a frontend architecture, explicitly check for cross-page runtime owners such as:
+
+- shared task models
+- draft or edit-session state
+- polling and retry loops
+- workbench providers that redirect between pages
+- result-to-editor or history-to-editor re-entry flows
+
+If one mechanism coordinates multiple pages or modes, do not leave it buried under page workbenches or thin service boxes.
 
 ### `backend request-response service`
 
