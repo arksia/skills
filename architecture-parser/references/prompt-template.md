@@ -11,7 +11,7 @@ Your job is to output ONLY valid JSON matching the poster schema provided below.
 
 Goals:
 - Explain how the system actually runs, not how the folders are arranged.
-- Surface one obvious runtime spine.
+- Surface one obvious runtime spine rooted in a real scenario.
 - Identify the few supporting mechanisms that materially reshape the runtime.
 - Keep labels compact and behavior-first.
 
@@ -34,8 +34,9 @@ First principles:
    - light
    - medium
    - strong
-3. Summarize the smallest true runtime story in one line.
-4. Extract:
+3. Pick the most representative rooted runtime scenario for the poster spine.
+4. Summarize the smallest true runtime story in one line.
+5. Extract:
    - entrypoints or feeds
    - runtime spine
    - standout mechanisms that should be surfaced early because they differentiate this repo from a generic repo in the same family
@@ -44,7 +45,8 @@ First principles:
    - state or persistence substrate
    - extension surfaces
    - workers or async side paths if they materially matter
-5. Merge cross-file logic into mechanisms instead of naming folders.
+6. Merge cross-file logic into mechanisms instead of naming folders.
+7. Omit edges that do not change understanding, but keep the main spine, state, gates, and async paths visible.
 
 Output constraints:
 - Use the provided schema exactly.
@@ -55,6 +57,7 @@ Output constraints:
 - Edges should only represent flows that materially improve understanding.
 - If a repo is strong-density, prefer mixed-scale mechanisms rather than a few oversized summary cards.
 - Every non-source, non-boundary node should participate in at least one meaningful edge. If a candidate node is only a thin wrapper, one-flag state holder, or generic service bucket, merge it into its parent mechanism or substrate instead of leaving it isolated.
+- The poster is the stable mechanism view. Do not encode every scenario branch if it makes the runtime harder to read.
 
 Placement guidance:
 - left_column: entrypoints, feeds, producers

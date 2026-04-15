@@ -1,34 +1,20 @@
 ---
 name: architecture-parser
-description: Reverse-engineer a repository into an evidence-backed architecture blueprint, structured poster JSON, and a runtime-style HTML architecture map. Use this whenever the user wants to understand how a codebase actually runs, asks for architecture diagrams or HTML maps, wants to trace entrypoints/loops/state/extensions/workers, or asks to turn source code into a poster-class architecture artifact rather than a folder summary.
+description: Reverse-engineer a repository into evidence-backed architecture assets with a runtime-first method. Use this whenever the user wants to understand how a codebase actually runs, trace request or task flow, extract execution paths, explain state and persistence, find gates and workers, or generate architecture blueprints, poster JSON, and HTML maps instead of a folder summary.
 ---
 
 # Architecture Parser
 
-Treat architecture parsing as reverse engineering, not as prettier repo listing.
+Treat architecture parsing as staged reverse engineering, not prettier repo listing.
 
-The deliverable for this skill is a compact bundle:
+Default deliverables:
 
 - `project-architecture_blueprint.md`
+- `project-runtime-flows.md`
 - `project-architecture-poster.json`
 - `project-architecture-map.html`
 
-Use the files in `references/` and the renderer in `scripts/` instead of inventing a new output format.
-
-## What this skill optimizes for
-
-- Runtime-first explanations
-- One obvious control spine
-- A small number of high-value mechanisms
-- Evidence-backed labels
-- HTML that reads like a poster, not a dependency graph
-
-Target a poster-class reading experience:
-
-- light background
-- sparse, intentional edges
-- mixed-scale mechanism boxes
-- one main runtime lane plus support lanes
+Use the files in `references/` and the renderer in `scripts/` instead of inventing a new format.
 
 ## Core workflow
 
@@ -51,83 +37,108 @@ Pick density:
 
 Use runtime shape, not marketing labels.
 
-### 2. Trace one real runtime unit
+### 2. Select rooted runtime scenarios
 
-Follow one end-to-end path:
+Pick 1 to 3 representative runtime units. Good roots are concrete:
 
-- what starts the system
-- what assembles context
-- what owns control flow
-- what executes side effects
-- what gates execution
-- what persists or restores state
+- one HTTP request
+- one CLI command
+- one agent turn
+- one scheduled job
+- one worker task
+
+For each scenario, record:
+
+- trigger
+- entry evidence
+- completion condition
+- why it is representative
+
+If no clear entrypoint exists, say so and switch to exported-surface analysis instead of inventing a runtime.
+
+### 3. Trace the smallest true runtime story
+
+For each rooted scenario, trace:
+
+- trigger
+- context assembly
+- main control flow
+- policy or permission gates
+- side-effect execution
+- state reads
+- state writes
+- async handoffs
+- completion or re-entry
 
 If you cannot summarize the runtime in one sentence, keep tracing.
 
-### 3. Extract mechanisms, not folders
+### 4. Extract mechanisms, not folders
 
 Merge files into behavior-level mechanisms when they act as one decision.
 
-Pull standout mechanisms forward early. Ask which 2 or 3 subsystems make this repo recognizably different from a generic repo in the same family, then give those mechanisms first-class space in the model.
+Promote a mechanism only when it materially reshapes runtime by owning at least one of:
 
-Prefer:
+- orchestration
+- fanout
+- policy enforcement
+- durable state
+- boundary crossing
+- background routing
+- extension hosting
+
+Default noise candidates:
+
+- leaf utilities
+- schema helpers
+- thin wrappers with no routing power
+- repetitive adapters that do not change control flow
+
+Reduce noise in this order:
+
+1. hide leaf helpers
+2. merge thin wrapper chains
+3. collapse repeated side branches into one mechanism
+4. omit redundant edges and list them explicitly
+
+Prefer behavior names such as:
 
 - `Permission Arbitration`
 - `Route Shell And Cache`
 - `Task Lifecycle Engine`
 - `Persistence Substrate`
 
-Avoid:
+Avoid generic ownership labels such as:
 
 - `utils`
 - `services`
 - `components`
 - raw folder dumps
 
-### 4. Produce the structured poster JSON
+### 5. Produce the outputs
 
-Read [poster-schema.md](D:\skills\architecture-parser\references\poster-schema.md).
+#### Runtime flows
 
-The JSON is the authoritative architecture model. Keep it evidence-backed:
+Use `project-runtime-flows.md` to make the runtime extraction explicit before you generate the poster.
 
-- each box should have 1 or 2 anchor files
-- each group should explain a mechanism
-- edges should explain runtime, state, gating, loopback, or extension
-- notes should contain judgments, not essays
+For each scenario, include:
 
-Use [prompt-template.md](D:\skills\architecture-parser\references\prompt-template.md) as the default prompting frame. Adapt it to the repo, but keep the abstractions derived from the repo rather than from any prior sample.
+- one-line summary
+- ordered spine steps
+- gates
+- state reads and writes
+- async handoffs
+- omitted edges
+- open questions
+- confidence
 
-### 5. Render the HTML
+Keep this compact. It is a validation artifact, not a long report.
 
-Run:
+#### Blueprint
 
-```powershell
-node D:\skills\architecture-parser\scripts\render-architecture-map.mjs <poster-json> <output-html>
-```
-
-The renderer expects the schema from `poster-schema.md`. It handles layout and visual grammar; the JSON should stay semantic.
-
-### 6. Critique and iterate
-
-Before stopping, inspect the output against this checklist:
-
-- the main spine is obvious in one glance
-- state and persistence are visible
-- extension surfaces and workers are visible when they matter
-- the page does not read like a sitemap or folder tree
-- strong repos are not flattened into 5 bland cards
-- non-source mechanisms are not left as isolated boxes; thin wrappers and generic service buckets are merged instead
-- notes are compact and judgment-heavy
-
-If it feels wrong, fix the model first, then the labels, then the placement.
-
-## Output rules
-
-### Blueprint
-
-Keep `project-architecture_blueprint.md` compact and mechanism-first:
+Keep `project-architecture_blueprint.md` mechanism-first:
 
 - what the system is
+- dominant family and density
 - primary runtime flow
 - major mechanisms
 - state and persistence
@@ -135,97 +146,78 @@ Keep `project-architecture_blueprint.md` compact and mechanism-first:
 - extensions and async paths
 - risky couplings
 
-### Poster JSON
+#### Poster JSON
 
-Use the exact structure in `poster-schema.md`.
+Read [poster-schema.md](./references/poster-schema.md).
 
-Do not emit pixel coordinates unless you are deliberately overriding the default layout for a special case. The renderer should normally infer placement from lanes and sections.
+The JSON is the stable mechanism view, not a dump of every scenario branch. Keep it evidence-backed:
 
-### HTML map
+- each box should have 1 or 2 anchor files
+- each group should explain a mechanism
+- edges should explain runtime, state, gating, loopback, or extension
+- notes should contain judgments, not essays
 
-Use the bundled renderer. Only hand-edit the generated HTML when debugging the renderer itself.
+Use [prompt-template.md](./references/prompt-template.md) as the default extraction frame.
+
+#### HTML map
+
+Run:
+
+```powershell
+node ./scripts/render-architecture-map.mjs <poster-json> <output-html>
+```
+
+The renderer expects the schema from `poster-schema.md`. Keep the JSON semantic; do not hand-place boxes unless the layout genuinely needs an override.
+
+### 6. Critique and iterate
+
+Before stopping, inspect the output against this checklist:
+
+- the main spine is obvious in one glance
+- the rooted scenario is concrete rather than generic
+- state and persistence are visible
+- extension surfaces and workers are visible when they matter
+- the page does not read like a sitemap or folder tree
+- strong repos are not flattened into a few bland cards
+- evidence, inference, and open questions are distinguishable
+
+If it feels wrong, fix the model first, then the labels, then the placement.
 
 ## Family guidance
 
 ### `agent-runtime / orchestrator`
 
-Usually emphasize:
-
-- entry modes
-- query or task loop
-- tool or effect runtime
-- permissions
-- persistence
-- extension surfaces
-- workers or agents
+Usually emphasize entry modes, the query or task loop, tool or effect runtime, permissions, persistence, extension surfaces, and workers or agents.
 
 ### `frontend application`
 
-Usually emphasize:
-
-- auth, bootstrap, and visibility gates
-- route, layout, and navigation shell
-- client-side control boundaries and long-lived UI state
-- query, detail, update, workflow, or operator loops
-- backend API, storage, compute, realtime, notification, or audit boundaries
-
-Do not turn the result into a page inventory, component catalog, or route list.
-Collapse sibling pages into mechanism families unless a page owns a distinct runtime.
-Do not promote every page-owned workflow into the mechanism row. Only lift a frontend subsystem into `mechanism_clusters` if it behaves like shared runtime, shared state rail, reusable workflow substrate, or a cross-cutting boundary across multiple surfaces.
-When several frontend verticals are mostly parallel page workbenches, keep them inside the top workbench/router block or merge them into fewer downstream mechanisms, then order any remaining mechanism clusters by runtime flow so the poster does not create artificial cross-canvas backtracking.
+Usually emphasize auth, bootstrap, and visibility gates, the route or layout shell, long-lived client state, shared workflow loops, and backend, storage, realtime, or notification boundaries. Do not turn the result into a route list or component catalog.
 
 ### `backend request-response service`
 
-Usually emphasize:
-
-- ingress, transport, and bootstrap
-- middleware, auth, and policy gates
-- handler, domain, service, and data boundaries
-- cache, queue, notification, or async side paths
-- persistence and external system boundaries
-
-Do not turn the result into an endpoint dump or framework layer checklist.
+Usually emphasize ingress and bootstrap, middleware, auth and policy gates, handler, domain and data boundaries, async side paths, persistence, and external systems. Do not turn the result into an endpoint dump.
 
 ### `event-driven / queue system`
 
-Usually emphasize:
-
-- producer
-- broker or router
-- consumers
-- handler stages
-- retries, dead-letter, or state checkpoints
+Usually emphasize producers, brokers or routers, consumers, handler stages, retries, dead-letter paths, or checkpoints.
 
 ### `data pipeline / batch system`
 
-Usually emphasize:
-
-- source
-- staged transforms
-- orchestration
-- checkpoints
-- sink
-- data quality or replay paths
+Usually emphasize sources, staged transforms, orchestration, checkpoints, sinks, and replay or quality paths.
 
 ### `library / SDK`
 
-Usually emphasize:
-
-- public entrypoints
-- core contract
-- orchestration or runtime kernel
-- adapters or integrations
-- extension hooks
-- state or cache surfaces when they affect semantics
+Usually emphasize public entrypoints, the core contract, a runtime kernel or coordination layer, adapters or integrations, extension hooks, and state or cache surfaces when they affect semantics.
 
 ## Recovery questions
 
 When stuck, ask:
 
 - What is the smallest true runtime story here?
+- What is the root event?
 - Which mechanisms materially reshape that story?
 - Where does state live?
 - Where do extensions enter?
-- What could break if someone adds a feature carelessly?
+- What is still inference rather than proof?
 
-If you can answer those well, the JSON and HTML usually become straightforward.
+If you can answer those well, the runtime flows, poster JSON, and HTML usually become straightforward.
