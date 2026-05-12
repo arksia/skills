@@ -1,6 +1,6 @@
 ---
 name: intent-guard
-description: Use for non-trivial coding work when the agent should infer the real engineering intent before editing code. Make sure to use this for new features, refactors, deletions, migrations, cross-file work, module-to-module changes, compatibility-sensitive bug fixes, or any request that sounds simple but may hide broader constraints or original design intent. Use this skill when the user asks things like "can we delete this?", "why is this here?", or "did we try this before?", or when the requested change touches multiple areas that may have hidden coupling.
+description: Use for non-trivial coding changes when the agent should infer the real engineering intent before editing. Trigger on features, refactors, deletions, migrations, cross-file changes, compatibility-sensitive fixes, or requests like "can we delete this?" and "why is this here?".
 ---
 
 Infer hidden engineering intent before broad editing.
