@@ -3,20 +3,16 @@ name: intent-guard
 description: Understand existing code and design intent before making non-trivial edits. Use for features, refactors, deletions, migrations, cross-file or cross-module changes, compatibility-sensitive fixes, or when the current implementation's reason is not obvious.
 ---
 
-Understand code and intent before coding.
-
-Keep it short. Prefer bullets. Do not create long notes.
+Understand code and design intent before editing.
 
 If the codebase can resolve an uncertainty, inspect it before asking me.
 
-## Core rule
+Keep `.intent` notes short. Prefer bullets. Record decisions and constraints, not long prose.
 
-Do not start implementation until both of these are clear enough:
+Do not start implementation until both of these are clear:
 
 1. how the code currently works
 2. why it is supposed to work that way
-
-If either is unclear, stop and resolve that first.
 
 ## The workflow
 
