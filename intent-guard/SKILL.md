@@ -1,17 +1,56 @@
 ---
 name: intent-guard
-description: Use for non-trivial coding changes when the agent should infer the real engineering intent before editing. Trigger on features, refactors, deletions, migrations, cross-file changes, compatibility-sensitive fixes, or requests like "can we delete this?" and "why is this here?".
+description: Understand existing code and design intent before making non-trivial edits. Use for features, refactors, deletions, migrations, cross-file or cross-module changes, compatibility-sensitive fixes, or when the current implementation's reason is not obvious.
 ---
 
-Infer hidden engineering intent before broad editing.
+Understand code and intent before coding.
 
 Keep it short. Prefer bullets. Do not create long notes.
 
-If the codebase can resolve an uncertainty, inspect it before asking the user.
+If the codebase can resolve an uncertainty, inspect it before asking me.
 
-## Read order
+## Core rule
 
-Before broad grep or edits, read only the smallest relevant context in this order:
+Do not start implementation until both of these are clear enough:
+
+1. how the code currently works
+2. why it is supposed to work that way
+
+If either is unclear, stop and resolve that first.
+
+## The workflow
+
+### 1. Confirm code understanding
+
+Before editing, make sure you understand:
+
+- the active control flow
+- where the behavior is enforced
+- which tests or callers depend on it
+- whether the implementation contains awkward, indirect, or legacy-looking logic
+
+If the current code path is still fuzzy, read more code before doing anything else.
+
+### 2. Confirm intent understanding
+
+Before editing, make sure you understand:
+
+- what the requested change is
+- what must still remain true
+- why the current implementation may have been written this way
+- whether any business rule, compatibility promise, rollout condition, or historical decision explains the current shape
+
+### 3. Check `.intent` when the reason is not obvious
+
+Check `.intent` when:
+
+- the code is more complex than the visible requirement
+- the implementation is awkward or non-obvious
+- the behavior looks intentionally inconvenient
+- the logic seems to protect a special case, tenant, client, migration path, or legacy contract
+- the simplest rewrite would likely remove behavior whose purpose you cannot justify
+
+Read only the smallest relevant context in this order:
 
 1. `AGENTS.md`
 2. `.intent/areas/<area>.md` for the touched area, if it exists
@@ -21,9 +60,7 @@ Before broad grep or edits, read only the smallest relevant context in this orde
 
 Do not scan all of `.intent/`.
 
-## Matching rules
-
-Treat an intent as relevant if one of these matches:
+Treat an intent note as relevant if one of these matches:
 
 - same area
 - same file
@@ -33,62 +70,26 @@ Treat an intent as relevant if one of these matches:
 Prefer `open` over `archive`.
 Prefer `superseded` and `abandoned` notes when they touch the same path.
 
-## Core job
+### 4. Ask me when `.intent` does not answer the question
 
-Before editing, answer:
+If `.intent` is missing or still does not explain the reason well enough, ask me.
 
-1. What does the user appear to want?
-2. What does the repo appear to want?
-3. What must still hold?
-4. What path is tempting but wrong?
-5. What proves the change is safe?
+Ask only when the missing context changes the implementation decision.
 
-Reduce the result to:
-
-```md
-Intent review:
-- Goal: ...
-- Preserve: ...
-- Avoid: ...
-- Validate with: ...
-```
-
-## Note statuses
-
-Use these states in `.intent` notes:
-
-- `open`
-- `done`
-- `abandoned`
-- `superseded`
-
-Operational meaning:
-
-- `open`: still shapes current work
-- `done`: historical context, may still explain current design
-- `abandoned`: do not resume blindly
-- `superseded`: do not extend the old path when a newer one exists
-
-## When intent is missing
-
-Many existing repos will have incomplete intent notes.
-
-When `.intent` is missing or insufficient:
-
-1. infer as much as possible from code, tests, comments, docs, and nearby history
-2. continue if the remaining uncertainty does not change the design
-3. ask the user when the missing intent is load-bearing
-
-Load-bearing gaps include:
+Good reasons to ask:
 
 - hidden consumers
 - compatibility promises
-- abandoned approaches not visible in code
 - whether an old path is still intentionally alive
+- abandoned approaches not visible in code
 - which behavior wins when tradeoffs conflict
+- why an apparently awkward implementation must stay
 
 Resolve missing intent through small, sequential questions.
+Ask one focused question at a time.
 For each question, provide your recommended answer first.
+
+If several gaps exist, resolve them one-by-one. Do not dump a questionnaire.
 
 Use this shape:
 
@@ -99,7 +100,7 @@ Intent gap:
 - Why this matters: ...
 ```
 
-If several gaps exist, resolve them one-by-one. Do not dump a questionnaire.
+### 5. Write the confirmed intent back into `.intent`
 
 ## Write rules
 
@@ -117,6 +118,9 @@ Use note metadata deliberately when the work is complex enough to need routing:
 - `superseded_by` matters when an old path is replaced
 - `version` matters when intent history is grouped by release or change wave
 
+When an answer from me explains why the code works this way or what must
+remain true, write it back into `.intent`.
+
 Do not write a new intent for trivial edits.
 Do not treat every feature or bug fix as worth persistent notes.
 
@@ -128,9 +132,19 @@ Persist intent only when at least one of these is true:
 - the change crosses modules or boundaries where future edits may miss the reason
 - the task required confirming background context before coding
 - the implementation deliberately avoids an abandoned or superseded path
+- background intent had to be clarified because it was not visible in code
 
 If the change is straightforward and the reason is already obvious from the
 code, tests, and surrounding context, skip persistent intent notes.
+
+## Note statuses
+
+Use these states in `.intent` notes:
+
+- `open`: still shapes current work
+- `done`: historical context, may still explain current design
+- `abandoned`: do not resume blindly
+- `superseded`: do not extend the old path when a newer one exists
 
 ## Area notes
 
@@ -239,7 +253,7 @@ superseded_by: null
 - the obvious change revives an abandoned path
 - the obvious change extends a superseded path
 - deletion may break hidden consumers
-- the code suggests a compatibility boundary the user did not mention
+- the code suggests a compatibility boundary that was not mentioned in the request
 - missing intent changes the design decision
 
 ## Working style

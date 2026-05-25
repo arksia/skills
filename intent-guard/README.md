@@ -1,8 +1,8 @@
 # intent-guard
 
-`intent-guard` is a lightweight skill for coding agents.
+`intent-guard` is a lightweight skill for coding workflows.
 
-It helps an agent pause before non-trivial code changes, infer the real
+It helps pause before non-trivial code changes, infer the real
 engineering intent, and ask for missing context only when the repository cannot
 answer it.
 
