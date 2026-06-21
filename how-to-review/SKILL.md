@@ -3,9 +3,7 @@ name: how-to-review
 description: Write a short reviewer guide after coding work is done. Use when finishing a bug fix, feature, refactor, or performance change and you want the final summary to help a human review the change quickly and accurately.
 ---
 
-Write a reviewer guide after the implementation is done.
-
-This skill is for guiding human review, not for doing the review itself.
+Write a reviewer guide after the implementation is done to help me review the change, not to do the review itself.
 
 Start from the real change. Read `git diff`, the changed files, and only the smallest surrounding context needed.
 
