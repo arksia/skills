@@ -1,0 +1,29 @@
+{
+  "skill_name": "learning-by-doing",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "这个 React 页面现在把筛选条件、接口请求、列表渲染和分页状态全写在一个组件里，已经开始很难维护了。请帮我重构一下，同时不要只改代码，顺便让我知道这次应该沉淀哪些工程能力。",
+      "expected_output": "The assistant should treat this as a substantial refactor, provide brief learning anchors only around real design decisions, avoid over-engineering, and end with exactly three concise questions corresponding to those anchors.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "订单导出接口偶尔会重复生成同一批报表，怀疑是并发请求或重试导致的。帮我定位并修复这个 bug，修完后告诉我这种问题以后该怎么分析。",
+      "expected_output": "The assistant should frame the task around reproduction, concurrency/idempotency, evidence-driven debugging, and regression tests, then end with exactly three concise questions corresponding to the learning anchors.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "我想给搜索接口加缓存，当前接口 QPS 不算低，但是数据也会更新。帮我设计并实现一个稳妥方案，过程中讲讲为什么这么选。",
+      "expected_output": "The assistant should identify cache strategy tradeoffs, invalidation and consistency risks, observability/testing concerns, avoid blindly adding cache, and end with exactly three concise questions corresponding to the learning anchors.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "把用户资料页的按钮文案从“保存”改成“提交”，顺便干中学一下。",
+      "expected_output": "The assistant should make or describe the trivial text change normally and should not force a learning anchor or final questions because there is no meaningful engineering decision.",
+      "files": []
+    }
+  ]
+}

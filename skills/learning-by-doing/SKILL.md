@@ -21,15 +21,12 @@ When the task does contain a real engineering decision, call it out briefly at t
 
 Ask questions only when the answer changes the implementation strategy.
 
-After completing the work, include `Learning Notes` only if there was a real learning-worthy decision. Keep it brief: at most 4 bullets, one sentence per bullet, and no generic advice that could apply to any task.
+If learning anchors were raised during the work, end the final response with exactly 3 concise questions that correspond to those anchors and help the user test whether they can reuse the judgment independently.
 
 ```markdown
-**Learning Notes**
-
-- Engineering judgment: the judgment this task should train.
-- Key tradeoff: why this solution fits, and which plausible alternative was rejected.
-- Reusable heuristic: how to make a similar decision independently next time.
-- Self-check questions: 1-3 questions that test whether the user actually understands the lesson.
+- [Question that tests the relevant engineering judgment.]
+- [Question that asks the user to compare the chosen solution with a plausible alternative.]
+- [Question that asks how the same judgment would transfer to a similar future task.]
 ```
 
 Keep the reflection tied to the actual code or design. Prefer plain engineering language over pattern names. Name a pattern or algorithm only when it genuinely explains the solution.
