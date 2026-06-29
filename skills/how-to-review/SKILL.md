@@ -1,9 +1,9 @@
 ---
 name: how-to-review
-description: Write a short reviewer guide after coding work is done. Use when finishing a bug fix, feature, refactor, or performance change and you want the final summary to help user review the change quickly and accurately.
+description: Write a short reviewer guide after coding work is done. Use when finishing a bug fix, feature, refactor, or performance change.
 ---
 
-Write a reviewer guide after the implementation is done to help me review the change, not to do the review itself.
+Write a reviewer guide after the implementation is done to help me review the change.
 
 Start from the real change. Read `git diff`, the changed files, and only the smallest surrounding context needed.
 
